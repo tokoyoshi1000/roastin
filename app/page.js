@@ -2,7 +2,7 @@
 import { useState } from 'react'
 
 export default function Home() {
-  const [url, setUrl] = useState('')
+  const [text, setText] = useState('')
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState(null)
   const [error, setError] = useState(null)
@@ -17,7 +17,7 @@ export default function Home() {
       const res = await fetch('/api/roast', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url })
+        body: JSON.stringify({ text })
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Something went wrong')
@@ -46,41 +46,54 @@ export default function Home() {
           <span style={{ color: '#E94560' }}>costing you deals.</span>
         </h1>
 
-        <p style={{ fontSize: 18, color: '#8892a4', maxWidth: 480, lineHeight: 1.6, marginBottom: 48 }}>
-          Paste your LinkedIn URL. Get brutally honest AI feedback + a concrete action plan in 60 seconds. Free.
+        <p style={{ fontSize: 18, color: '#8892a4', maxWidth: 500, lineHeight: 1.6, marginBottom: 40 }}>
+          Paste your LinkedIn profile text below. Get brutally honest AI feedback + a concrete action plan in 60 seconds. Free.
         </p>
+
+        {/* HOW TO COPY INSTRUCTIONS */}
+        {!result && (
+          <div style={{
+            background: '#16213e', border: '1px solid #ffffff15', borderRadius: 12,
+            padding: '16px 20px', maxWidth: 560, width: '100%', marginBottom: 24, textAlign: 'left'
+          }}>
+            <div style={{ fontSize: 12, fontWeight: 700, color: '#E94560', marginBottom: 8, letterSpacing: 1, textTransform: 'uppercase' }}>How to get your profile text</div>
+            <div style={{ fontSize: 13, color: '#8892a4', lineHeight: 1.8 }}>
+              1. Go to your LinkedIn profile<br/>
+              2. Copy your <strong style={{ color: '#c8cfe0' }}>Headline</strong>, <strong style={{ color: '#c8cfe0' }}>About</strong> section, and top 3 <strong style={{ color: '#c8cfe0' }}>Experience</strong> entries<br/>
+              3. Paste it all below — the more you paste, the better the roast 🔥
+            </div>
+          </div>
+        )}
 
         {/* FORM */}
         {!result && (
-          <form onSubmit={handleSubmit} style={{ width: '100%', maxWidth: 520 }}>
-            <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', justifyContent: 'center' }}>
-              <input
-                type="url"
-                placeholder="https://linkedin.com/in/yourprofile"
-                value={url}
-                onChange={e => setUrl(e.target.value)}
-                required
-                style={{
-                  flex: 1, minWidth: 260, padding: '14px 18px', borderRadius: 10,
-                  border: '1px solid #ffffff20', background: '#16213e', color: '#e8eaf6',
-                  fontSize: 15, outline: 'none'
-                }}
-              />
-              <button
-                type="submit"
-                disabled={loading}
-                style={{
-                  padding: '14px 28px', borderRadius: 10, border: 'none',
-                  background: loading ? '#555' : '#E94560', color: 'white',
-                  fontSize: 15, fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer',
-                  whiteSpace: 'nowrap'
-                }}
-              >
-                {loading ? 'Roasting... 🔥' : 'Roast me →'}
-              </button>
-            </div>
-            <p style={{ fontSize: 12, color: '#555', marginTop: 10 }}>
-              No login required. We only read your public profile.
+          <form onSubmit={handleSubmit} style={{ width: '100%', maxWidth: 560 }}>
+            <textarea
+              placeholder={"Paste your LinkedIn profile here...\n\nHeadline: Sales Manager | Helping B2B companies grow\n\nAbout: I am passionate about sales and...\n\nExperience: Sales Manager at Acme Corp (2021-present)..."}
+              value={text}
+              onChange={e => setText(e.target.value)}
+              required
+              rows={10}
+              style={{
+                width: '100%', padding: '14px 18px', borderRadius: 10,
+                border: '1px solid #ffffff20', background: '#16213e', color: '#e8eaf6',
+                fontSize: 14, outline: 'none', resize: 'vertical', boxSizing: 'border-box',
+                fontFamily: 'inherit', lineHeight: 1.6, marginBottom: 12
+              }}
+            />
+            <button
+              type="submit"
+              disabled={loading}
+              style={{
+                width: '100%', padding: '16px', borderRadius: 10, border: 'none',
+                background: loading ? '#555' : '#E94560', color: 'white',
+                fontSize: 16, fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer'
+              }}
+            >
+              {loading ? 'Roasting... 🔥' : 'Roast my profile →'}
+            </button>
+            <p style={{ fontSize: 12, color: '#444', marginTop: 8 }}>
+              Your text stays private. We only use it to generate your analysis.
             </p>
           </form>
         )}
@@ -89,14 +102,14 @@ export default function Home() {
         {error && (
           <div style={{
             marginTop: 24, padding: '16px 24px', background: '#E9456015',
-            border: '1px solid #E9456040', borderRadius: 10, color: '#E94560', maxWidth: 520
+            border: '1px solid #E9456040', borderRadius: 10, color: '#E94560', maxWidth: 560
           }}>
             {error}
           </div>
         )}
 
         {/* RESULT */}
-        {result && <RoastResult result={result} url={url} onReset={() => { setResult(null); setUrl('') }} />}
+        {result && <RoastResult result={result} onReset={() => { setResult(null); setText('') }} />}
 
         {/* SOCIAL PROOF */}
         {!result && (
@@ -115,26 +128,6 @@ export default function Home() {
         )}
       </section>
 
-      {/* HOW IT WORKS */}
-      {!result && (
-        <section style={{ padding: '60px 20px', background: '#16213e', textAlign: 'center' }}>
-          <h2 style={{ fontSize: 28, fontWeight: 700, marginBottom: 40 }}>How it works</h2>
-          <div style={{ display: 'flex', gap: 32, justifyContent: 'center', flexWrap: 'wrap', maxWidth: 800, margin: '0 auto' }}>
-            {[
-              { step: '1', title: 'Paste your URL', desc: 'Enter your LinkedIn profile URL. We fetch your public profile data.' },
-              { step: '2', title: 'AI roasts your profile', desc: 'Our AI analyzes your headline, summary, experience, and social proof.' },
-              { step: '3', title: 'Get your action plan', desc: 'Receive a score, a roast, and a concrete list of improvements to make today.' },
-            ].map(({ step, title, desc }) => (
-              <div key={step} style={{ flex: 1, minWidth: 200, maxWidth: 240 }}>
-                <div style={{ width: 48, height: 48, borderRadius: '50%', background: '#E94560', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, fontWeight: 800, margin: '0 auto 16px' }}>{step}</div>
-                <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 8 }}>{title}</h3>
-                <p style={{ fontSize: 14, color: '#8892a4', lineHeight: 1.6 }}>{desc}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
-
       {/* FOOTER */}
       <footer style={{ padding: '24px', textAlign: 'center', borderTop: '1px solid #ffffff10' }}>
         <span style={{ fontSize: 12, color: '#333' }}>
@@ -145,23 +138,21 @@ export default function Home() {
   )
 }
 
-function RoastResult({ result, url, onReset }) {
-  const shareText = result.shareText || `RoastIn gave my LinkedIn a ${result.score}/100. Time to fix that. 🔥`
-
+function RoastResult({ result, onReset }) {
   return (
     <div style={{ width: '100%', maxWidth: 680, textAlign: 'left', marginTop: 32 }}>
 
       {/* SCORE */}
       <div style={{
         background: '#16213e', border: '1px solid #E9456040', borderRadius: 14,
-        padding: '24px 28px', marginBottom: 20, display: 'flex', alignItems: 'center', gap: 24
+        padding: '24px 28px', marginBottom: 20, display: 'flex', alignItems: 'center', gap: 24, flexWrap: 'wrap'
       }}>
         <div style={{ textAlign: 'center' }}>
           <div style={{ fontSize: 56, fontWeight: 800, color: '#E94560', lineHeight: 1 }}>{result.score}</div>
           <div style={{ fontSize: 12, color: '#8892a4', marginTop: 4 }}>/ 100</div>
         </div>
         <div>
-          <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 6 }}>Your Profile Score</div>
+          <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}>Your Profile Score</div>
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
             {result.categoryScores && Object.entries(result.categoryScores).map(([cat, score]) => (
               <span key={cat} style={{
@@ -180,10 +171,10 @@ function RoastResult({ result, url, onReset }) {
       {/* ROAST */}
       <div style={{ background: '#16213e', border: '1px solid #ffffff10', borderRadius: 14, padding: '24px 28px', marginBottom: 20 }}>
         <div style={{ fontSize: 13, fontWeight: 700, color: '#E94560', letterSpacing: 1, marginBottom: 12, textTransform: 'uppercase' }}>🔥 The Roast</div>
-        <p style={{ fontSize: 15, lineHeight: 1.7, color: '#c8cfe0' }}>{result.roast}</p>
+        <p style={{ fontSize: 15, lineHeight: 1.7, color: '#c8cfe0', margin: 0 }}>{result.roast}</p>
       </div>
 
-      {/* ACTION PLAN */}
+      {/* QUICK WINS */}
       <div style={{ background: '#16213e', border: '1px solid #ffffff10', borderRadius: 14, padding: '24px 28px', marginBottom: 20 }}>
         <div style={{ fontSize: 13, fontWeight: 700, color: '#E94560', letterSpacing: 1, marginBottom: 16, textTransform: 'uppercase' }}>⚡ Your Top 3 Quick Wins</div>
         {result.quickWins && result.quickWins.map((win, i) => (
@@ -211,10 +202,10 @@ function RoastResult({ result, url, onReset }) {
         </button>
       </div>
 
-      {/* SHARE */}
+      {/* SHARE + RESET */}
       <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
         <button
-          onClick={() => window.open(`https://www.linkedin.com/sharing/share-offsite/?url=https://roastin.me`, '_blank')}
+          onClick={() => window.open('https://www.linkedin.com/sharing/share-offsite/?url=https://roastin.me', '_blank')}
           style={{ padding: '10px 20px', borderRadius: 8, border: '1px solid #0077b5', background: 'transparent', color: '#0077b5', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}
         >
           Share on LinkedIn
