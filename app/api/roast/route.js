@@ -8,7 +8,7 @@ Analyze the profile across four areas (each scored out of 25):
 1. Headline & Tagline
 2. About / Summary
 3. Experience & Descriptions
-4. Social Proof
+4. Social Proof (recommendations, certifications, skills listed)
 
 Return ONLY valid JSON in this exact format:
 {
@@ -19,7 +19,7 @@ Return ONLY valid JSON in this exact format:
     "Experience": <0-25>,
     "Social Proof": <0-25>
   },
-  "roast": "<3-5 sharp, honest sentences roasting the profile. Be direct and witty. Point out the most glaring weaknesses. Don't be cruel but don't sugarcoat.>",
+  "roast": "<3-5 sharp, honest sentences roasting the profile. Be direct and witty. Point out the most glaring weaknesses.>",
   "quickWins": [
     "<Highest impact fix — specific and actionable, takes < 30 min>",
     "<Second highest impact fix — specific and actionable>",
@@ -30,33 +30,12 @@ Return ONLY valid JSON in this exact format:
 
 export async function POST(request) {
   try {
-    const { url } = await request.json()
+    const { text } = await request.json()
 
-    if (!url || !url.includes('linkedin.com')) {
-      return NextResponse.json({ error: 'Please enter a valid LinkedIn profile URL.' }, { status: 400 })
+    if (!text || text.trim().length < 50) {
+      return NextResponse.json({ error: 'Please paste more of your profile — at least your headline and About section.' }, { status: 400 })
     }
 
-    // Step 1: Fetch profile data via Proxycurl
-    const proxycurlRes = await fetch(
-      `https://nubela.co/proxycurl/api/v2/linkedin?url=${encodeURIComponent(url)}&use_cache=if-present`,
-      {
-        headers: { Authorization: `Bearer ${process.env.PROXYCURL_API_KEY}` }
-      }
-    )
-
-    if (!proxycurlRes.ok) {
-      if (proxycurlRes.status === 404) {
-        return NextResponse.json({ error: 'Profile not found. Make sure your LinkedIn profile is public.' }, { status: 404 })
-      }
-      throw new Error('Could not fetch LinkedIn profile. Make sure it is public.')
-    }
-
-    const profile = await proxycurlRes.json()
-
-    // Step 2: Build profile summary for AI
-    const profileSummary = buildProfileSummary(profile)
-
-    // Step 3: Call OpenAI
     const openaiRes = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -67,7 +46,7 @@ export async function POST(request) {
         model: 'gpt-4o',
         messages: [
           { role: 'system', content: SYSTEM_PROMPT },
-          { role: 'user', content: `Analyze this LinkedIn profile:\n\n${profileSummary}` }
+          { role: 'user', content: `Analyze this LinkedIn profile content:\n\n${text.slice(0, 6000)}` }
         ],
         response_format: { type: 'json_object' },
         temperature: 0.8
@@ -85,35 +64,4 @@ export async function POST(request) {
     console.error('Roast error:', err)
     return NextResponse.json({ error: err.message || 'Something went wrong. Please try again.' }, { status: 500 })
   }
-}
-
-function buildProfileSummary(profile) {
-  const parts = []
-
-  if (profile.full_name) parts.push(`Name: ${profile.full_name}`)
-  if (profile.headline) parts.push(`Headline: ${profile.headline}`)
-  if (profile.summary) parts.push(`About/Summary:\n${profile.summary}`)
-  if (profile.city || profile.country_full_name) parts.push(`Location: ${[profile.city, profile.country_full_name].filter(Boolean).join(', ')}`)
-  if (profile.connections) parts.push(`Connections: ${profile.connections}`)
-  if (profile.recommendations) parts.push(`Recommendations: ${profile.recommendations}`)
-
-  if (profile.experiences?.length > 0) {
-    parts.push('\nExperience:')
-    profile.experiences.slice(0, 4).forEach(exp => {
-      const desc = exp.description ? `\n  Description: ${exp.description.slice(0, 300)}` : ' (no description)'
-      parts.push(`- ${exp.title} at ${exp.company}${desc}`)
-    })
-  }
-
-  if (profile.education?.length > 0) {
-    parts.push('\nEducation:')
-    profile.education.slice(0, 2).forEach(edu => {
-      parts.push(`- ${edu.degree_name || 'Degree'} at ${edu.school}`)
-    })
-  }
-
-  if (profile.accomplishment_courses?.length > 0) parts.push(`\nCertifications: ${profile.accomplishment_courses.length} listed`)
-  if (profile.skills?.length > 0) parts.push(`\nTop Skills: ${profile.skills.slice(0, 8).map(s => s.name).join(', ')}`)
-
-  return parts.join('\n')
 }
