@@ -39,6 +39,7 @@ export default function Home() {
   async function handleCheckout() {
     setCheckingOut(true)
     try {
+      localStorage.setItem('roastin_profile', text)
       const res = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
