@@ -1,43 +1,13 @@
-/**
- * app/page.js
- *
- * RoastIn — Main Page (Frontend)
- * ==============================
- * Single-page React app. All UI state is local (no global store needed at this scale).
- *
- * Page sections (in render order):
- *   1. NAV           — Sticky top bar with logo + "Get Roasted" CTA
- *   2. HERO          — Headline, subtext, stats row, example output preview
- *   3. FORM          — LinkedIn text input + submit (hidden after result)
- *   4. RESULT        — Score card, roast, quick wins, upsell, share buttons
- *   5. HOW IT WORKS  — 3-card explanation section (hidden after result)
- *   6. FOOTER        — Minimal branding
- *
- * State:
- *   text              — Raw LinkedIn profile text pasted by user
- *   loading           — True while POST /api/roast is in flight
- *   result            — Parsed JSON from /api/roast on success
- *   error             — Error message string, shown inline below form
- *   showInstructions  — Toggles the collapsible "how to copy" help block
- *
- * Design tokens (module-level constants):
- *   RED    = #E94560  — Brand accent: CTAs, highlights, score numbers
- *   NAVY   = #0f0f1a  — Page background
- *   CARD   = #12121f  — Card/panel background
- *   BORDER = rgba(255,255,255,0.07)  — Subtle dividers and outlines
- */
-
 'use client'
 import { useState } from 'react'
 
-// ── Design tokens ─────────────────────────────────────────────────────────────
+// Design tokens
 const RED = '#E94560'
 const NAVY = '#0f0f1a'
 const CARD = '#12121f'
 const BORDER = 'rgba(255,255,255,0.07)'
 
 export default function Home() {
-  // ── State ───────────────────────────────────────────────────────────────────
   const [text, setText] = useState('')
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState(null)
@@ -45,10 +15,6 @@ export default function Home() {
   const [showInstructions, setShowInstructions] = useState(false)
   const [checkingOut, setCheckingOut] = useState(false)
 
-  /**
-   * handleSubmit — fires on form submit.
-   * POSTs profile text to /api/roast, stores result or error in state.
-   */
   async function handleSubmit(e) {
     e.preventDefault()
     setLoading(true)
@@ -58,7 +24,7 @@ export default function Home() {
       const res = await fetch('/api/roast', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text })
+        body: JSON.stringify({ text }),
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Something went wrong')
@@ -87,316 +53,222 @@ export default function Home() {
     }
   }
 
+  function onReset() {
+    setResult(null)
+    setError(null)
+    setText('')
+  }
+
+  const scoreColor = result
+    ? result.score >= 70 ? '#22c55e' : result.score >= 45 ? '#f59e0b' : RED
+    : RED
+
   return (
     <div style={{ minHeight: '100vh', background: NAVY }}>
 
-      {/* ── 1. NAV ───────────────────────────────────────────────────────────
-          Sticky with blur backdrop. Scrolls to #roast-form on CTA click. */}
-      <nav style={{
-        position: 'sticky', top: 0, zIndex: 100,
-        borderBottom: `1px solid ${BORDER}`,
-        background: 'rgba(8,8,15,0.85)',
-        backdropFilter: 'blur(12px)',
-        padding: '0 24px',
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        height: 56
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <span style={{ fontSize: 20 }}>🔥</span>
-          <span style={{ fontWeight: 800, fontSize: 18, letterSpacing: '-0.3px' }}>
-            Roast<span style={{ color: RED }}>In</span>
-          </span>
-        </div>
+      {/* NAV */}
+      <nav style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '18px 32px', borderBottom: `1px solid ${BORDER}`, position: 'sticky', top: 0, background: NAVY, zIndex: 100 }}>
+        <span style={{ fontWeight: 800, fontSize: 20, color: '#fff', letterSpacing: -0.5 }}>
+          🔥 <span style={{ color: RED }}>Roast</span>In
+        </span>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          <span style={{ fontSize: 13, color: '#666' }}>Free · No login required</span>
-          <a href="#roast-form" style={{
-            background: RED, color: 'white', padding: '7px 16px',
-            borderRadius: 8, fontSize: 13, fontWeight: 700,
-            textDecoration: 'none', display: 'inline-block'
-          }}>Get Roasted →</a>
+          <span style={{ color: '#888', fontSize: 13 }}>Free · No login required</span>
+          <a href="#form" style={{ background: RED, color: '#fff', padding: '9px 20px', borderRadius: 8, fontWeight: 700, fontSize: 13, textDecoration: 'none' }}>
+            Get Roasted →
+          </a>
         </div>
       </nav>
 
-      {/* ── 2. HERO ──────────────────────────────────────────────────────────
-          Radial glow for depth. Stats row above the fold (social proof).
-          Example output card teases the result format before submission. */}
-      <section style={{
-        maxWidth: 760, margin: '0 auto', padding: '80px 24px 60px',
-        textAlign: 'center', position: 'relative'
-      }}>
-        {/* Decorative glow — pointer-events disabled so it doesn't block clicks */}
-        <div style={{
-          position: 'absolute', top: 40, left: '50%', transform: 'translateX(-50%)',
-          width: 600, height: 300,
-          background: 'radial-gradient(ellipse, rgba(233,69,96,0.12) 0%, transparent 70%)',
-          pointerEvents: 'none'
-        }} />
-
-        <div style={{
-          display: 'inline-flex', alignItems: 'center', gap: 6,
-          background: 'rgba(233,69,96,0.1)', border: '1px solid rgba(233,69,96,0.25)',
-          borderRadius: 100, padding: '5px 14px', fontSize: 12, fontWeight: 600,
-          color: RED, letterSpacing: '0.5px', textTransform: 'uppercase', marginBottom: 28
-        }}>
-          🔥 AI-Powered LinkedIn Analysis
-        </div>
-
-        <h1 style={{
-          fontSize: 'clamp(36px, 6.5vw, 68px)', fontWeight: 900,
-          lineHeight: 1.05, letterSpacing: '-1.5px', margin: '0 0 24px'
-        }}>
-          Your LinkedIn profile<br />
-          is <span style={{ color: RED }}>costing you deals.</span>
-        </h1>
-
-        <p style={{ fontSize: 18, color: '#8892a4', lineHeight: 1.7, maxWidth: 500, margin: '0 auto 48px' }}>
-          Paste your profile below. Our AI gives you a brutally honest score, a roast that stings, and a concrete fix list — in 60 seconds. Free.
-        </p>
-
-        {/* Stats row — "2,400+" is a placeholder; replace with real DB counter later */}
-        <div style={{ display: 'flex', justifyContent: 'center', gap: 40, marginBottom: 64, flexWrap: 'wrap' }}>
-          {[
-            { n: '2,400+', label: 'Profiles roasted' },
-            { n: '60s', label: 'Analysis time' },
-            { n: 'Free', label: 'No credit card' },
-          ].map(({ n, label }) => (
-            <div key={n}>
-              <div style={{ fontSize: 26, fontWeight: 800, color: 'white' }}>{n}</div>
-              <div style={{ fontSize: 12, color: '#555', marginTop: 3 }}>{label}</div>
-            </div>
-          ))}
-        </div>
-
-        {/* Example output preview — fictional but realistic data.
-            Gradient blur at bottom creates a "there's more below" teaser. */}
-        {!result && (
-          <div style={{
-            background: CARD, border: `1px solid ${BORDER}`,
-            borderRadius: 16, padding: '20px 24px', marginBottom: 48, textAlign: 'left',
-            position: 'relative', overflow: 'hidden'
-          }}>
-            <div style={{
-              position: 'absolute', top: 0, left: 0, right: 0,
-              padding: '6px 12px', background: 'rgba(233,69,96,0.08)',
-              borderBottom: `1px solid ${BORDER}`,
-              fontSize: 11, fontWeight: 700, color: RED, letterSpacing: 1, textTransform: 'uppercase'
-            }}>Example output</div>
-            <div style={{ marginTop: 28, display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
-              <div style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: 48, fontWeight: 900, color: RED, lineHeight: 1 }}>63</div>
-                <div style={{ fontSize: 11, color: '#555', marginTop: 2 }}>/100</div>
+      {/* HERO */}
+      {!result && (
+        <section style={{ textAlign: 'center', padding: '80px 24px 48px' }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(233,69,96,0.12)', border: `1px solid rgba(233,69,96,0.3)`, borderRadius: 100, padding: '6px 16px', fontSize: 12, color: RED, fontWeight: 700, letterSpacing: 1, marginBottom: 32 }}>
+            🔥 AI-POWERED LINKEDIN ANALYSIS
+          </div>
+          <h1 style={{ fontSize: 'clamp(36px,6vw,72px)', fontWeight: 900, color: '#fff', lineHeight: 1.1, margin: '0 auto 20px', maxWidth: 800, letterSpacing: -2 }}>
+            Your LinkedIn profile<br />is <span style={{ color: RED }}>costing you deals.</span>
+          </h1>
+          <p style={{ color: '#999', fontSize: 18, maxWidth: 520, margin: '0 auto 48px', lineHeight: 1.6 }}>
+            Paste your profile below. Our AI gives you a brutally honest score, a roast that stings, and a concrete fix list — in 60 seconds. Free.
+          </p>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: 48, marginBottom: 64 }}>
+            {[['2,400+', 'Profiles roasted'], ['60s', 'Analysis time'], ['Free', 'No credit card']].map(([v, l]) => (
+              <div key={l} style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: 28, fontWeight: 900, color: '#fff' }}>{v}</div>
+                <div style={{ fontSize: 12, color: '#666', marginTop: 4 }}>{l}</div>
               </div>
-              <div style={{ flex: 1 }}>
-                <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 8 }}>Profile Score</div>
+            ))}
+          </div>
+
+          {/* EXAMPLE OUTPUT */}
+          <div style={{ maxWidth: 640, margin: '0 auto 64px', background: CARD, border: `1px solid ${BORDER}`, borderRadius: 16, padding: 28, textAlign: 'left' }}>
+            <div style={{ fontSize: 11, color: '#555', fontWeight: 700, letterSpacing: 1, marginBottom: 16 }}>EXAMPLE OUTPUT</div>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: 12, marginBottom: 12 }}>
+              <span style={{ fontSize: 52, fontWeight: 900, color: RED, lineHeight: 1 }}>63</span>
+              <div>
+                <div style={{ color: '#fff', fontWeight: 700, marginBottom: 6 }}>Profile Score</div>
                 <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-                  {[['Headline', 12, 25], ['About', 16, 25], ['Experience', 20, 25], ['Social Proof', 15, 25]].map(([cat, s, m]) => (
-                    <span key={cat} style={{
-                      fontSize: 11, padding: '2px 9px', borderRadius: 20,
-                      background: s >= 20 ? 'rgba(39,174,96,0.1)' : s >= 15 ? 'rgba(243,156,18,0.1)' : 'rgba(233,69,96,0.1)',
-                      color: s >= 20 ? '#27AE60' : s >= 15 ? '#F39C12' : RED,
-                      border: `1px solid ${s >= 20 ? 'rgba(39,174,96,0.2)' : s >= 15 ? 'rgba(243,156,18,0.2)' : 'rgba(233,69,96,0.2)'}`
-                    }}>{cat}: {s}/{m}</span>
+                  {[['Headline', 12, 25], ['About', 16, 25], ['Experience', 20, 25], ['Social Proof', 15, 25]].map(([k, v, max]) => (
+                    <span key={k} style={{ fontSize: 11, padding: '3px 8px', borderRadius: 100, background: v/max < 0.55 ? 'rgba(233,69,96,0.15)' : v/max < 0.75 ? 'rgba(245,158,11,0.15)' : 'rgba(34,197,94,0.15)', color: v/max < 0.55 ? '#E94560' : v/max < 0.75 ? '#f59e0b' : '#22c55e', fontWeight: 600 }}>{k}: {v}/{max}</span>
                   ))}
                 </div>
               </div>
             </div>
-            <div style={{ marginTop: 16, padding: '12px 16px', background: 'rgba(233,69,96,0.05)', borderRadius: 10, borderLeft: `3px solid ${RED}` }}>
-              <div style={{ fontSize: 11, fontWeight: 700, color: RED, marginBottom: 6, textTransform: 'uppercase', letterSpacing: 0.5 }}>🔥 The Roast</div>
-              <p style={{ fontSize: 13, color: '#8892a4', margin: 0, lineHeight: 1.6 }}>
-                "Your headline is as generic as a LinkedIn template. The About section reads like a press release written by someone who's never met you — impressive-sounding, but says nothing that differentiates you from the other 900 million users."
-              </p>
+            <div style={{ borderLeft: `3px solid ${RED}`, paddingLeft: 16, marginTop: 16 }}>
+              <div style={{ fontSize: 11, color: RED, fontWeight: 700, letterSpacing: 1, marginBottom: 8 }}>🔥 THE ROAST</div>
+              <p style={{ color: '#ccc', fontSize: 14, lineHeight: 1.6, margin: 0 }}>"Your headline is as generic as a LinkedIn template. The About section reads like a press release written by someone who's never met you — impressive-sounding, but says nothing that differentiates you from the other 900 million users."</p>
             </div>
-            <div style={{
-              position: 'absolute', bottom: 0, left: 0, right: 0, height: 60,
-              background: `linear-gradient(to bottom, transparent, ${CARD})`
-            }} />
           </div>
-        )}
-      </section>
+        </section>
+      )}
 
-      {/* ── 3. FORM ──────────────────────────────────────────────────────────
-          Card-style form with collapsible instructions and privacy note.
-          Entire section hidden once result is shown. */}
+      {/* FORM */}
       {!result && (
-        <section id="roast-form" style={{ maxWidth: 620, margin: '0 auto', padding: '0 24px 80px' }}>
+        <section id="form" style={{ maxWidth: 640, margin: '0 auto', padding: '0 24px 80px' }}>
           <form onSubmit={handleSubmit}>
-            <div style={{
-              background: CARD, border: `1px solid ${BORDER}`,
-              borderRadius: 16, overflow: 'hidden',
-              boxShadow: '0 20px 60px rgba(0,0,0,0.4)'
-            }}>
-              <div style={{ padding: '14px 20px', borderBottom: `1px solid ${BORDER}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <span style={{ fontSize: 13, fontWeight: 600, color: '#aaa' }}>Paste your LinkedIn profile text</span>
-                <button type="button" onClick={() => setShowInstructions(!showInstructions)}
-                  style={{ fontSize: 12, color: RED, background: 'none', border: 'none', cursor: 'pointer', fontWeight: 600 }}>
-                  {showInstructions ? 'Hide' : 'How to copy it?'}
+            <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: 16, overflow: 'hidden' }}>
+              <div style={{ padding: '16px 20px 0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ color: '#fff', fontWeight: 700, fontSize: 14 }}>Paste your LinkedIn profile text</span>
+                <button type="button" onClick={() => setShowInstructions(!showInstructions)} style={{ background: 'none', border: 'none', color: RED, fontSize: 13, cursor: 'pointer', fontWeight: 600 }}>
+                  How to copy it?
                 </button>
               </div>
               {showInstructions && (
-                <div style={{ padding: '12px 20px', background: 'rgba(233,69,96,0.04)', borderBottom: `1px solid ${BORDER}`, fontSize: 13, color: '#8892a4', lineHeight: 1.8 }}>
-                  1. Go to your LinkedIn profile<br />
-                  2. Press <strong style={{ color: '#ccc' }}>Ctrl+A</strong> → <strong style={{ color: '#ccc' }}>Ctrl+C</strong><br />
-                  3. Paste below — the AI filters out navigation noise automatically
+                <div style={{ margin: '12px 20px', background: 'rgba(233,69,96,0.08)', border: `1px solid rgba(233,69,96,0.2)`, borderRadius: 8, padding: '12px 16px', fontSize: 13, color: '#ccc', lineHeight: 1.6 }}>
+                  Go to your LinkedIn profile → press Ctrl+A (Cmd+A on Mac) → Ctrl+C → paste here.
                 </div>
               )}
-              <textarea value={text} onChange={e => setText(e.target.value)} required rows={10}
-                placeholder={"Paste your LinkedIn profile here...\n\nThe more you paste (headline, about, experience), the more accurate the roast."}
-                style={{ width: '100%', padding: '20px', boxSizing: 'border-box', background: 'transparent', border: 'none', color: '#e8eaf6', fontSize: 14, lineHeight: 1.7, resize: 'vertical', fontFamily: 'inherit', outline: 'none', display: 'block' }}
+              <textarea
+                value={text}
+                onChange={e => setText(e.target.value)}
+                placeholder={'Paste your LinkedIn profile here...\n\nThe more you paste (headline, about, experience), the more accurate the roast.'}
+                style={{ width: '100%', minHeight: 200, background: 'transparent', border: 'none', color: '#fff', fontSize: 14, lineHeight: 1.7, padding: '16px 20px', resize: 'vertical', outline: 'none', boxSizing: 'border-box', fontFamily: 'inherit' }}
               />
-              <div style={{ padding: '12px 20px', borderTop: `1px solid ${BORDER}` }}>
-                <button type="submit" disabled={loading} style={{
-                  width: '100%', padding: '15px', borderRadius: 10, border: 'none',
-                  background: loading ? '#333' : `linear-gradient(135deg, #E94560, #c73652)`,
-                  color: 'white', fontSize: 15, fontWeight: 800, cursor: loading ? 'not-allowed' : 'pointer',
-                  letterSpacing: '-0.2px', boxShadow: loading ? 'none' : '0 4px 20px rgba(233,69,96,0.4)', transition: 'all 0.2s'
-                }}>
-                  {loading ? '🔥 Roasting your profile...' : 'Roast my profile →'}
-                </button>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, marginTop: 10 }}>
-                  <span style={{ fontSize: 12, color: '#444' }}>🔒 Your text stays private. Never stored or shared.</span>
-                </div>
-              </div>
+            </div>
+            <button
+              type="submit"
+              disabled={loading || !text.trim()}
+              style={{ width: '100%', marginTop: 12, padding: '16px', borderRadius: 12, border: 'none', background: loading || !text.trim() ? '#333' : RED, color: '#fff', fontSize: 16, fontWeight: 800, cursor: loading || !text.trim() ? 'not-allowed' : 'pointer', transition: 'all 0.2s' }}
+            >
+              {loading ? 'Roasting your profile...' : 'Roast my profile →'}
+            </button>
+            <div style={{ textAlign: 'center', marginTop: 12, color: '#555', fontSize: 12 }}>
+              🔒 Your text stays private. Never stored or shared.
             </div>
           </form>
-          {error && (
-            <div style={{ marginTop: 16, padding: '14px 20px', background: 'rgba(233,69,96,0.08)', border: `1px solid rgba(233,69,96,0.25)`, borderRadius: 10, color: RED, fontSize: 14 }}>
-              {error}
-            </div>
-          )}
         </section>
       )}
 
-      {/* ── 4. RESULT ────────────────────────────────────────────────────────
-          Shown only after successful analysis. onReset returns to form. */}
-      {result && <RoastResult result={result} onReset={() => { setResult(null); setText('') }} />}
+      {/* ERROR */}
+      {error && (
+        <div style={{ maxWidth: 640, margin: '0 auto', padding: '0 24px 40px' }}>
+          <div style={{ background: 'rgba(233,69,96,0.1)', border: `1px solid rgba(233,69,96,0.3)`, borderRadius: 12, padding: '16px 20px', color: RED }}>
+            {error}
+          </div>
+          <button onClick={onReset} style={{ marginTop: 12, background: 'none', border: `1px solid ${BORDER}`, color: '#666', padding: '10px 20px', borderRadius: 8, cursor: 'pointer', fontSize: 13 }}>
+            ← Try again
+          </button>
+        </div>
+      )}
 
-      {/* ── 5. HOW IT WORKS ──────────────────────────────────────────────────
-          Hidden after result to keep the page focused. */}
-      {!result && (
-        <section style={{ borderTop: `1px solid ${BORDER}`, padding: '72px 24px', textAlign: 'center' }}>
-          <div style={{ maxWidth: 720, margin: '0 auto' }}>
-            <p style={{ fontSize: 12, fontWeight: 700, color: RED, letterSpacing: 2, textTransform: 'uppercase', marginBottom: 12 }}>How it works</p>
-            <h2 style={{ fontSize: 32, fontWeight: 800, marginBottom: 48, letterSpacing: '-0.5px' }}>Three steps. Sixty seconds.</h2>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 24 }}>
-              {[
-                { n: '01', title: 'Copy your profile', desc: 'Go to your LinkedIn profile, press Ctrl+A and Ctrl+C. Done.' },
-                { n: '02', title: 'AI roasts it', desc: 'GPT-4o analyzes your headline, about, experience and social proof against top-performing profiles.' },
-                { n: '03', title: 'Get your action plan', desc: 'Score out of 100, a roast that stings, and 3 fixes you can action today.' },
-              ].map(({ n, title, desc }) => (
-                <div key={n} style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: 14, padding: '28px 24px', textAlign: 'left' }}>
-                  <div style={{ fontSize: 12, fontWeight: 700, color: RED, marginBottom: 12, letterSpacing: 1 }}>{n}</div>
-                  <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 10 }}>{title}</h3>
-                  <p style={{ fontSize: 14, color: '#666', lineHeight: 1.7, margin: 0 }}>{desc}</p>
+      {/* RESULT */}
+      {result && (
+        <section style={{ maxWidth: 680, margin: '0 auto', padding: '40px 24px 80px' }}>
+
+          {/* SCORE CARD */}
+          <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: 20, padding: '32px', marginBottom: 24 }}>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: 16, marginBottom: 20 }}>
+              <span style={{ fontSize: 72, fontWeight: 900, color: scoreColor, lineHeight: 1 }}>{result.score}</span>
+              <div>
+                <div style={{ color: '#888', fontSize: 13, marginBottom: 4 }}>/100</div>
+                <div style={{ color: '#fff', fontWeight: 700, fontSize: 18 }}>Profile Score</div>
+              </div>
+            </div>
+            {result.breakdown && (
+              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 20 }}>
+                {Object.entries(result.breakdown).map(([k, v]) => (
+                  <span key={k} style={{ fontSize: 12, padding: '4px 12px', borderRadius: 100, background: v < 14 ? 'rgba(233,69,96,0.15)' : v < 18 ? 'rgba(245,158,11,0.15)' : 'rgba(34,197,94,0.15)', color: v < 14 ? '#E94560' : v < 18 ? '#f59e0b' : '#22c55e', fontWeight: 600 }}>{k}: {v}/25</span>
+                ))}
+              </div>
+            )}
+            <div style={{ borderLeft: `3px solid ${RED}`, paddingLeft: 20 }}>
+              <div style={{ fontSize: 11, color: RED, fontWeight: 700, letterSpacing: 1, marginBottom: 10 }}>🔥 THE ROAST</div>
+              <p style={{ color: '#ddd', fontSize: 15, lineHeight: 1.7, margin: 0 }}>{result.roast}</p>
+            </div>
+          </div>
+
+          {/* QUICK WINS */}
+          {result.quickWins && result.quickWins.length > 0 && (
+            <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: 20, padding: '28px', marginBottom: 24 }}>
+              <div style={{ fontSize: 11, color: '#555', fontWeight: 700, letterSpacing: 1, marginBottom: 16 }}>⚡ QUICK WINS</div>
+              {result.quickWins.map((win, i) => (
+                <div key={i} style={{ display: 'flex', gap: 12, alignItems: 'flex-start', marginBottom: i < result.quickWins.length - 1 ? 14 : 0 }}>
+                  <span style={{ color: RED, fontWeight: 700, fontSize: 13, minWidth: 20 }}>{i + 1}.</span>
+                  <span style={{ color: '#ccc', fontSize: 14, lineHeight: 1.6 }}>{win}</span>
                 </div>
               ))}
             </div>
+          )}
+
+          {/* UPSELL — Full Report */}
+          <div style={{ background: `linear-gradient(135deg, rgba(233,69,96,0.15) 0%, rgba(233,69,96,0.05) 100%)`, border: `1px solid rgba(233,69,96,0.3)`, borderRadius: 20, padding: '32px', marginBottom: 24, textAlign: 'center' }}>
+            <div style={{ fontSize: 11, color: RED, fontWeight: 700, letterSpacing: 1, marginBottom: 12 }}>🚀 WANT THE FULL PICTURE?</div>
+            <h3 style={{ color: '#fff', fontSize: 22, fontWeight: 800, margin: '0 0 12px', letterSpacing: -0.5 }}>Get Your Full LinkedIn Report</h3>
+            <p style={{ color: '#aaa', fontSize: 14, lineHeight: 1.6, margin: '0 0 24px', maxWidth: 420, marginLeft: 'auto', marginRight: 'auto' }}>
+              Section-by-section breakdown with rewrites, 10 specific improvements, a 4-week action plan, and keyword optimization.
+            </p>
+            <button
+              onClick={handleCheckout}
+              disabled={checkingOut}
+              style={{ padding: '14px 36px', borderRadius: 10, border: 'none', background: RED, color: '#fff', fontSize: 16, fontWeight: 800, cursor: checkingOut ? 'not-allowed' : 'pointer', opacity: checkingOut ? 0.7 : 1, boxShadow: '0 4px 20px rgba(233,69,96,0.4)', transition: 'all 0.2s' }}>
+              {checkingOut ? 'Redirecting to checkout...' : 'Get Full Report — €9'}
+            </button>
+            <div style={{ color: '#555', fontSize: 12, marginTop: 10 }}>One-time payment · Instant delivery</div>
+          </div>
+
+          {/* SHARE + RESET */}
+          <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
+            <button
+              onClick={() => window.open('https://www.linkedin.com/sharing/share-offsite/?url=https://roastin.me', '_blank')}
+              style={{ padding: '11px 22px', borderRadius: 9, border: '1px solid #0077b5', background: 'rgba(0,119,181,0.08)', color: '#0077b5', fontSize: 13, fontWeight: 700, cursor: 'pointer' }}>
+              Share on LinkedIn
+            </button>
+            <button
+              onClick={onReset}
+              style={{ padding: '11px 22px', borderRadius: 9, border: `1px solid ${BORDER}`, background: 'transparent', color: '#555', fontSize: 13, cursor: 'pointer' }}>
+              ← Roast another profile
+            </button>
           </div>
         </section>
       )}
 
-      {/* ── 6. FOOTER ────────────────────────────────────────────────────── */}
-      <footer style={{ borderTop: `1px solid ${BORDER}`, padding: '24px', textAlign: 'center' }}>
-        <span style={{ fontSize: 12, color: '#333' }}>
-          🔥 RoastIn — A <span style={{ color: RED }}>Vibe Ventures</span> product · Built in public
-        </span>
-      </footer>
-    </div>
-  )
-}
-
-/**
- * RoastResult Component
- * =====================
- * Displays the full AI analysis after a successful roast.
- *
- * Sections:
- *   - Score card  — big number (0–100) + 4 category score badges (color-coded)
- *   - The Roast   — AI-generated critique paragraph
- *   - Quick Wins  — 3 numbered, specific action items
- *   - Upsell      — €9 Full Report CTA (Stripe integration pending — see TODO)
- *   - Actions     — Share on LinkedIn + Roast another profile
- *
- * Color coding for category scores:
- *   Green  (≥20/25) — Good
- *   Amber  (≥15/25) — Needs work
- *   Red    (<15/25) — Critical issue
- *
- * @param {{ result: Object, onReset: Function }} props
- */
-function RoastResult({ result, onReset }) {
-  return (
-    <div style={{ maxWidth: 680, margin: '0 auto', padding: '40px 24px 80px' }}>
-
-      {/* Score card */}
-      <div style={{
-        background: CARD, border: `1px solid rgba(233,69,96,0.2)`,
-        borderRadius: 16, padding: '28px 32px', marginBottom: 16,
-        display: 'flex', alignItems: 'center', gap: 24, flexWrap: 'wrap',
-        boxShadow: '0 0 40px rgba(233,69,96,0.08)'
-      }}>
-        <div style={{ textAlign: 'center', minWidth: 80 }}>
-          <div style={{ fontSize: 64, fontWeight: 900, color: RED, lineHeight: 1, letterSpacing: '-2px' }}>{result.score}</div>
-          <div style={{ fontSize: 12, color: '#555', marginTop: 4 }}>/ 100</div>
-        </div>
-        <div style={{ flex: 1 }}>
-          <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 10 }}>Your Profile Score</div>
-          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-            {result.categoryScores && Object.entries(result.categoryScores).map(([cat, score]) => (
-              <span key={cat} style={{
-                fontSize: 12, padding: '4px 12px', borderRadius: 20, fontWeight: 600,
-                background: score >= 20 ? 'rgba(39,174,96,0.1)' : score >= 15 ? 'rgba(243,156,18,0.1)' : 'rgba(233,69,96,0.1)',
-                color: score >= 20 ? '#27AE60' : score >= 15 ? '#F39C12' : RED,
-                border: `1px solid ${score >= 20 ? 'rgba(39,174,96,0.25)' : score >= 15 ? 'rgba(243,156,18,0.25)' : 'rgba(233,69,96,0.25)'}`
-              }}>
-                {cat}: {score}/25
-              </span>
+      {/* HOW IT WORKS */}
+      {!result && (
+        <section style={{ padding: '80px 24px', textAlign: 'center', borderTop: `1px solid ${BORDER}` }}>
+          <div style={{ fontSize: 11, color: RED, fontWeight: 700, letterSpacing: 2, marginBottom: 16 }}>HOW IT WORKS</div>
+          <h2 style={{ color: '#fff', fontSize: 36, fontWeight: 900, margin: '0 0 48px', letterSpacing: -1 }}>Three steps. Sixty seconds.</h2>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: 24, flexWrap: 'wrap', maxWidth: 860, margin: '0 auto' }}>
+            {[
+              ['01', 'Copy your profile', 'Go to your LinkedIn profile, press Ctrl+A and Ctrl+C. Paste it here.'],
+              ['02', 'AI roasts it', 'GPT-4o analyzes your headline, about, experience and social proof.'],
+              ['03', 'Get your action plan', 'Score out of 100, a roast that stings, and 3 fixes you can do today.'],
+            ].map(([n, t, d]) => (
+              <div key={n} style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: 16, padding: '28px 24px', maxWidth: 240, textAlign: 'left' }}>
+                <div style={{ color: RED, fontWeight: 800, fontSize: 13, marginBottom: 12 }}>{n}</div>
+                <div style={{ color: '#fff', fontWeight: 700, fontSize: 16, marginBottom: 8 }}>{t}</div>
+                <div style={{ color: '#666', fontSize: 13, lineHeight: 1.6 }}>{d}</div>
+              </div>
             ))}
           </div>
-        </div>
-      </div>
+        </section>
+      )}
 
-      {/* The Roast */}
-      <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: 16, padding: '24px 28px', marginBottom: 16 }}>
-        <div style={{ fontSize: 11, fontWeight: 700, color: RED, letterSpacing: 1.5, marginBottom: 14, textTransform: 'uppercase' }}>🔥 The Roast</div>
-        <p style={{ fontSize: 15, lineHeight: 1.8, color: '#b0b8c8', margin: 0 }}>{result.roast}</p>
-      </div>
+      {/* FOOTER */}
+      <footer style={{ borderTop: `1px solid ${BORDER}`, padding: '24px 32px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
+        <span style={{ color: '#444', fontSize: 13 }}>🔥 RoastIn — <a href="https://vibe.ventures" style={{ color: '#555', textDecoration: 'none' }}>Vibe Ventures</a></span>
+        <span style={{ color: '#333', fontSize: 12 }}>Your data is never stored.</span>
+      </footer>
 
-      {/* Quick Wins */}
-      <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: 16, padding: '24px 28px', marginBottom: 16 }}>
-        <div style={{ fontSize: 11, fontWeight: 700, color: RED, letterSpacing: 1.5, marginBottom: 18, textTransform: 'uppercase' }}>⚡ Your Top 3 Quick Wins</div>
-        {result.quickWins && result.quickWins.map((win, i) => (
-          <div key={i} style={{ display: 'flex', gap: 14, marginBottom: i < 2 ? 16 : 0 }}>
-            <div style={{ width: 28, height: 28, borderRadius: '50%', background: RED, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 800, flexShrink: 0, color: 'white' }}>{i + 1}</div>
-            <p style={{ fontSize: 14, lineHeight: 1.7, color: '#b0b8c8', margin: 0, paddingTop: 4 }}>{win}</p>
-          </div>
-        ))}
-      </div>
-
-      {/* Upsell — TODO: wire up Stripe Checkout */}
-      <div style={{ background: 'linear-gradient(135deg, rgba(233,69,96,0.08), rgba(233,69,96,0.03))', border: `1px solid rgba(233,69,96,0.2)`, borderRadius: 16, padding: '28px 32px', marginBottom: 20, textAlign: 'center' }}>
-        <div style={{ fontSize: 20, fontWeight: 800, marginBottom: 8, letterSpacing: '-0.3px' }}>Want the full breakdown?</div>
-        <p style={{ fontSize: 14, color: '#666', marginBottom: 22, lineHeight: 1.6 }}>
-          10-point deep-dive report with rewritten examples for every section of your profile.
-        </p>
-        <button
-              onClick={handleCheckout}
-              disabled={checkingOut}
-              style={{ padding: '14px 28px', borderRadius: 9, border: 'none', background: '#E94560', color: '#fff', fontSize: 15, fontWeight: 800, cursor: checkingOut ? 'not-allowed' : 'pointer', opacity: checkingOut ? 0.7 : 1, boxShadow: '0 4px 20px rgba(233,69,96,0.35)' }}>
-              {checkingOut ? 'Redirecting...' : 'Get Full Report — €9'}
-            </button>
-      </div>
-
-      {/* Share + Reset actions */}
-      <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
-        <button onClick={() => window.open('https://www.linkedin.com/sharing/share-offsite/?url=https://roastin.me', '_blank')}
-          style={{ padding: '11px 22px', borderRadius: 9, border: '1px solid #0077b5', background: 'rgba(0,119,181,0.08)', color: '#0077b5', fontSize: 13, fontWeight: 700, cursor: 'pointer' }}>
-          Share on LinkedIn
-        </button>
-        <button onClick={onReset}
-          style={{ padding: '11px 22px', borderRadius: 9, border: `1px solid ${BORDER}`, background: 'transparent', color: '#555', fontSize: 13, cursor: 'pointer' }}>
-          ← Roast another profile
-        </button>
-      </div>
     </div>
   )
 }
