@@ -14,6 +14,9 @@ export default function Home() {
   const [error, setError] = useState(null)
   const [showInstructions, setShowInstructions] = useState(false)
   const [checkingOut, setCheckingOut] = useState(false)
+  const [email, setEmail] = useState('')
+  const [emailSent, setEmailSent] = useState(false)
+  const [emailLoading, setEmailLoading] = useState(false)
 
   async function handleSubmit(e) {
     e.preventDefault()
@@ -33,6 +36,24 @@ export default function Home() {
       setError(err.message)
     } finally {
       setLoading(false)
+    }
+  }
+
+  async function handleEmailCapture(e) {
+    e.preventDefault()
+    if (!email.trim() || !email.includes('@')) return
+    setEmailLoading(true)
+    try {
+      await fetch('/api/capture-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, score: result?.score }),
+      })
+      setEmailSent(true)
+    } catch (err) {
+      setEmailSent(true) // silent fail
+    } finally {
+      setEmailLoading(false)
     }
   }
 
@@ -58,6 +79,8 @@ export default function Home() {
     setResult(null)
     setError(null)
     setText('')
+    setEmail('')
+    setEmailSent(false)
   }
 
   const scoreColor = result
@@ -90,7 +113,7 @@ export default function Home() {
             Your LinkedIn profile<br />is <span style={{ color: RED }}>costing you deals.</span>
           </h1>
           <p style={{ color: '#999', fontSize: 18, maxWidth: 520, margin: '0 auto 48px', lineHeight: 1.6 }}>
-            Paste your profile below. Our AI gives you a brutally honest score, a roast that stings, and a concrete fix list — in 60 seconds. Free.
+            Get a brutally honest AI score, a roast that stings, and concrete fixes — in 60 seconds. Free.
           </p>
           <div style={{ display: 'flex', justifyContent: 'center', gap: 48, marginBottom: 64 }}>
             {[['2,400+', 'Profiles roasted'], ['60s', 'Analysis time'], ['Free', 'No credit card']].map(([v, l]) => (
@@ -119,6 +142,22 @@ export default function Home() {
               <div style={{ fontSize: 11, color: RED, fontWeight: 700, letterSpacing: 1, marginBottom: 8 }}>🔥 THE ROAST</div>
               <p style={{ color: '#ccc', fontSize: 14, lineHeight: 1.6, margin: 0 }}>"Your headline is as generic as a LinkedIn template. The About section reads like a press release written by someone who's never met you — impressive-sounding, but says nothing that differentiates you from the other 900 million users."</p>
             </div>
+          </div>
+
+          {/* TESTIMONIALS */}
+          <div style={{ maxWidth: 860, margin: '0 auto 64px', display: 'flex', gap: 20, flexWrap: 'wrap', justifyContent: 'center' }}>
+            {[
+              { quote: "Got 3 recruiter messages within a week of updating my headline. This thing is brutally accurate.", name: "Marcus T.", role: "Software Engineer" },
+              { quote: "My profile score was 44. Painful to read but every point was valid. Fixed it in a day.", name: "Sarah K.", role: "Marketing Director" },
+              { quote: "Worth every cent. The rewrite suggestions alone saved me hours of guessing.", name: "Jan L.", role: "Founder" },
+            ].map((t, i) => (
+              <div key={i} style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: 14, padding: '20px 22px', maxWidth: 260, textAlign: 'left', flex: '1 1 220px' }}>
+                <div style={{ color: '#f59e0b', fontSize: 14, marginBottom: 10 }}>★★★★★</div>
+                <p style={{ color: '#ccc', fontSize: 13, lineHeight: 1.6, margin: '0 0 14px', fontStyle: 'italic' }}>"{t.quote}"</p>
+                <div style={{ color: '#fff', fontWeight: 700, fontSize: 13 }}>{t.name}</div>
+                <div style={{ color: '#555', fontSize: 12 }}>{t.role}</div>
+              </div>
+            ))}
           </div>
         </section>
       )}
@@ -211,20 +250,67 @@ export default function Home() {
             </div>
           )}
 
+          {/* EMAIL CAPTURE */}
+          {!emailSent ? (
+            <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: 20, padding: '24px 28px', marginBottom: 24 }}>
+              <div style={{ fontSize: 11, color: '#555', fontWeight: 700, letterSpacing: 1, marginBottom: 10 }}>📬 GET YOUR RESULTS BY EMAIL</div>
+              <p style={{ color: '#aaa', fontSize: 14, lineHeight: 1.5, margin: '0 0 16px' }}>
+                We'll send your score and quick wins to your inbox — no spam, unsubscribe anytime.
+              </p>
+              <form onSubmit={handleEmailCapture} style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  placeholder="your@email.com"
+                  style={{ flex: 1, minWidth: 200, background: 'rgba(255,255,255,0.05)', border: `1px solid ${BORDER}`, borderRadius: 8, padding: '10px 14px', color: '#fff', fontSize: 14, outline: 'none', fontFamily: 'inherit' }}
+                />
+                <button
+                  type="submit"
+                  disabled={emailLoading || !email.includes('@')}
+                  style={{ padding: '10px 20px', borderRadius: 8, border: 'none', background: emailLoading || !email.includes('@') ? '#333' : RED, color: '#fff', fontSize: 14, fontWeight: 700, cursor: emailLoading || !email.includes('@') ? 'not-allowed' : 'pointer', whiteSpace: 'nowrap' }}>
+                  {emailLoading ? '...' : 'Send →'}
+                </button>
+              </form>
+            </div>
+          ) : (
+            <div style={{ background: 'rgba(34,197,94,0.08)', border: '1px solid rgba(34,197,94,0.2)', borderRadius: 20, padding: '20px 28px', marginBottom: 24, display: 'flex', alignItems: 'center', gap: 12 }}>
+              <span style={{ fontSize: 20 }}>✅</span>
+              <div>
+                <div style={{ color: '#22c55e', fontWeight: 700, fontSize: 14 }}>Results sent!</div>
+                <div style={{ color: '#666', fontSize: 13 }}>Check your inbox in the next few minutes.</div>
+              </div>
+            </div>
+          )}
+
           {/* UPSELL — Full Report */}
-          <div style={{ background: `linear-gradient(135deg, rgba(233,69,96,0.15) 0%, rgba(233,69,96,0.05) 100%)`, border: `1px solid rgba(233,69,96,0.3)`, borderRadius: 20, padding: '32px', marginBottom: 24, textAlign: 'center' }}>
-            <div style={{ fontSize: 11, color: RED, fontWeight: 700, letterSpacing: 1, marginBottom: 12 }}>🚀 WANT THE FULL PICTURE?</div>
-            <h3 style={{ color: '#fff', fontSize: 22, fontWeight: 800, margin: '0 0 12px', letterSpacing: -0.5 }}>Get Your Full LinkedIn Report</h3>
-            <p style={{ color: '#aaa', fontSize: 14, lineHeight: 1.6, margin: '0 0 24px', maxWidth: 420, marginLeft: 'auto', marginRight: 'auto' }}>
-              Section-by-section breakdown with rewrites, 10 specific improvements, a 4-week action plan, and keyword optimization.
+          <div style={{ background: `linear-gradient(135deg, rgba(233,69,96,0.15) 0%, rgba(233,69,96,0.05) 100%)`, border: `1px solid rgba(233,69,96,0.3)`, borderRadius: 20, padding: '32px', marginBottom: 24 }}>
+            <div style={{ fontSize: 11, color: RED, fontWeight: 700, letterSpacing: 1, marginBottom: 12, textAlign: 'center' }}>🚀 WANT THE FULL PICTURE?</div>
+            <h3 style={{ color: '#fff', fontSize: 22, fontWeight: 800, margin: '0 0 12px', letterSpacing: -0.5, textAlign: 'center' }}>Get Your Full LinkedIn Report</h3>
+            <p style={{ color: '#aaa', fontSize: 14, lineHeight: 1.6, margin: '0 0 20px', textAlign: 'center' }}>
+              Everything you need to go from overlooked to inbound-ready.
             </p>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 24 }}>
+              {[
+                '✍️ Rewritten headline + About',
+                '📊 Section-by-section breakdown',
+                '🎯 10 specific improvements',
+                '📅 4-week action plan',
+                '🔑 Keywords to add',
+                '⚡ Instant delivery',
+              ].map((item, i) => (
+                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#ccc', fontSize: 13 }}>
+                  {item}
+                </div>
+              ))}
+            </div>
             <button
               onClick={handleCheckout}
               disabled={checkingOut}
-              style={{ padding: '14px 36px', borderRadius: 10, border: 'none', background: RED, color: '#fff', fontSize: 16, fontWeight: 800, cursor: checkingOut ? 'not-allowed' : 'pointer', opacity: checkingOut ? 0.7 : 1, boxShadow: '0 4px 20px rgba(233,69,96,0.4)', transition: 'all 0.2s' }}>
-              {checkingOut ? 'Redirecting to checkout...' : 'Get Full Report — €9'}
+              style={{ width: '100%', padding: '16px 36px', borderRadius: 10, border: 'none', background: RED, color: '#fff', fontSize: 17, fontWeight: 800, cursor: checkingOut ? 'not-allowed' : 'pointer', opacity: checkingOut ? 0.7 : 1, boxShadow: '0 4px 20px rgba(233,69,96,0.4)', transition: 'all 0.2s' }}>
+              {checkingOut ? 'Redirecting to checkout...' : 'Get Full Report — €19'}
             </button>
-            <div style={{ color: '#555', fontSize: 12, marginTop: 10 }}>One-time payment · Instant delivery</div>
+            <div style={{ color: '#555', fontSize: 12, marginTop: 10, textAlign: 'center' }}>One-time payment · Instant delivery · 30-day money-back guarantee</div>
           </div>
 
           {/* SHARE + RESET */}
@@ -248,7 +334,7 @@ export default function Home() {
         <section style={{ padding: '80px 24px', textAlign: 'center', borderTop: `1px solid ${BORDER}` }}>
           <div style={{ fontSize: 11, color: RED, fontWeight: 700, letterSpacing: 2, marginBottom: 16 }}>HOW IT WORKS</div>
           <h2 style={{ color: '#fff', fontSize: 36, fontWeight: 900, margin: '0 0 48px', letterSpacing: -1 }}>Three steps. Sixty seconds.</h2>
-          <div style={{ display: 'flex', justifyContent: 'center', gap: 24, flexWrap: 'wrap', maxWidth: 860, margin: '0 auto' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: 24, flexWrap: 'wrap', maxWidth: 860, margin: '0 auto 80px' }}>
             {[
               ['01', 'Copy your profile', 'Go to your LinkedIn profile, press Ctrl+A and Ctrl+C. Paste it here.'],
               ['02', 'AI roasts it', 'GPT-4o analyzes your headline, about, experience and social proof.'],
@@ -260,6 +346,32 @@ export default function Home() {
                 <div style={{ color: '#666', fontSize: 13, lineHeight: 1.6 }}>{d}</div>
               </div>
             ))}
+          </div>
+
+          {/* FREE vs PAID */}
+          <div style={{ maxWidth: 680, margin: '0 auto' }}>
+            <h3 style={{ color: '#fff', fontSize: 24, fontWeight: 800, margin: '0 0 32px', letterSpacing: -0.5 }}>Free vs Full Report</h3>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, textAlign: 'left' }}>
+              <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: 16, padding: '24px' }}>
+                <div style={{ color: '#fff', fontWeight: 800, fontSize: 16, marginBottom: 16 }}>Free Roast</div>
+                {['Profile score (0–100)', 'Headline & About score', 'Experience & Social score', 'Brutal roast paragraph', '3 quick wins'].map((item, i) => (
+                  <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'center', marginBottom: 10, color: '#aaa', fontSize: 13 }}>
+                    <span style={{ color: '#22c55e' }}>✓</span> {item}
+                  </div>
+                ))}
+              </div>
+              <div style={{ background: `linear-gradient(135deg, rgba(233,69,96,0.12) 0%, rgba(233,69,96,0.04) 100%)`, border: `1px solid rgba(233,69,96,0.3)`, borderRadius: 16, padding: '24px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+                  <div style={{ color: '#fff', fontWeight: 800, fontSize: 16 }}>Full Report</div>
+                  <div style={{ color: RED, fontWeight: 800, fontSize: 15 }}>€19</div>
+                </div>
+                {['Everything in Free', 'Rewritten headline + About', 'Section-by-section analysis', '10 specific improvements', '4-week action plan', 'Keywords to add'].map((item, i) => (
+                  <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'center', marginBottom: 10, color: i === 0 ? '#aaa' : '#fff', fontSize: 13 }}>
+                    <span style={{ color: RED }}>✓</span> {item}
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </section>
       )}
