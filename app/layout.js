@@ -1,5 +1,4 @@
 /**
-import Script from 'next/script'
  * app/layout.js — RoastIn Root Layout & SEO
  *
  * Full metadata for Google #1 ranking on:
@@ -78,6 +77,10 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+      <head>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-PVZ0063LS1" />
+        <script dangerouslySetInnerHTML={{ __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-PVZ0063LS1');` }} />
+      </head>
       <body
         style={{
           margin: 0,
@@ -87,9 +90,7 @@ export default function RootLayout({ children }) {
           MozOsxFontSmoothing: 'grayscale',
         }}
       >
-        <Script src="https://www.googletagmanager.com/gtag/js?id=G-PVZ0063LS1" strategy="afterInteractive" />
-      <Script id="google-analytics" strategy="afterInteractive">{`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-PVZ0063LS1');`}</Script>
-      {children}
+        {children}
       </body>
     </html>
   )
