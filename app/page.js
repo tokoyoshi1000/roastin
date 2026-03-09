@@ -185,9 +185,10 @@ export default function Home() {
               <div>
                 <div style={{ color: '#fff', fontWeight: 700, marginBottom: 6 }}>Profile Score</div>
                 <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-                  {[['Headline', 12, 25], ['About', 16, 25], ['Experience', 20, 25], ['Social Proof', 15, 25]].map(([k, v, max]) => (
-                    <span key={k} style={{ fontSize: 11, padding: '3px 8px', borderRadius: 100, background: v/max < 0.55 ? 'rgba(233,69,96,0.15)' : v/max < 0.75 ? 'rgba(245,158,11,0.15)' : 'rgba(34,197,94,0.15)', color: v/max < 0.55 ? '#E94560' : v/max < 0.75 ? '#f59e0b' : '#22c55e', fontWeight: 600 }}>{ku: {v}/{max}</span>
-                  ))}
+                  {[['Headline', 12, 25], ['About', 16, 25], ['Experience', 20, 25], ['Social Proof', 15, 25]].map(([k, v, max]) => {
+                    const r = (v / max);
+                    return <span key={k} style={{ fontSize: 11, padding: '3px 8px', borderRadius: 100, background: r < 0.55 ? 'rgba(233,69,96,0.15)' : r < 0.75 ? 'rgba(245,158,11,0.15)' : 'rgba(34,197,94,0.15)', color: r < 0.55 ? '#E94560' : r < 0.75 ? '#f59e0b' : '#22c55e', fontWeight: 600 }}>{`${k}: ${v}/${max}`}</span>;
+                  })}
                 </div>
               </div>
             </div>
