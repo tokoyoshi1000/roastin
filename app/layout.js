@@ -1,6 +1,5 @@
 /**
-import CookieBanner from './components/CookieBanner'
- * app/layout.js â RoastIn Root Layout & SEO
+ * app/layout.js — RoastIn Root Layout & SEO
  *
  * Full metadata for Google #1 ranking on:
  * - linkedin profile checker
@@ -10,6 +9,8 @@ import CookieBanner from './components/CookieBanner'
  * - linkedin optimierung
  */
 
+import CookieBanner from './components/CookieBanner'
+
 export const metadata = {
   metadataBase: new URL('https://roastin.me'),
   title: {
@@ -17,7 +18,7 @@ export const metadata = {
     template: '%s | RoastIn',
   },
   description:
-    'Free AI-powered LinkedIn profile checker and analyzer. Find out why you\'re invisible to recruiters â get your score out of 100, a brutally honest roast, and 3 quick fixes in 60 seconds. LinkedIn Optimierung kostenlos.',
+    'Free AI-powered LinkedIn profile checker and analyzer. Find out why you\'re invisible to recruiters — get your score out of 100, a brutally honest roast, and 3 quick fixes in 60 seconds. LinkedIn Optimierung kostenlos.',
   keywords: [
     'linkedin profile checker',
     'linkedin profile analyzer',
@@ -40,7 +41,7 @@ export const metadata = {
     alternateLocale: ['de_DE'],
     url: 'https://roastin.me',
     siteName: 'RoastIn',
-    title: 'Free LinkedIn Profile Checker â Find Out Why Recruiters Skip You',
+    title: 'Free LinkedIn Profile Checker — Find Out Why Recruiters Skip You',
     description:
       'Paste your LinkedIn profile, get an AI score out of 100, a brutally honest roast, and 3 actionable fixes. Free. No login. 60 seconds.',
     images: [
@@ -48,7 +49,7 @@ export const metadata = {
         url: 'https://roastin.me/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'RoastIn â Free LinkedIn Profile Checker & Analyzer',
+        alt: 'RoastIn — Free LinkedIn Profile Checker & Analyzer',
       },
     ],
   },
@@ -56,7 +57,7 @@ export const metadata = {
     card: 'summary_large_image',
     title: 'Free LinkedIn Profile Checker & Roast | RoastIn',
     description:
-      'Find out why recruiters skip your profile. Free AI roast, score out of 100, and 3 fixes â in 60 seconds.',
+      'Find out why recruiters skip your profile. Free AI roast, score out of 100, and 3 fixes — in 60 seconds.',
     images: ['https://roastin.me/og-image.png'],
   },
   alternates: {
