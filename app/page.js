@@ -280,9 +280,11 @@ export default function Home() {
             </div>
             {result.breakdown && (
               <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 20 }}>
-                {Object.entries(result.breakdown).map(([k, v]) => (
-                  <span key={k} style={{ fontSize: 12, padding: '4px 12px', borderRadius: 100, background: v < 14 ? 'rgba(233,69,96,0.15)' : v < 18 ? 'rgba(245,158,11,0.15)' : 'rgba(34,197,94,0.15)', color: v < 14 ? '#E94560' : v < 18 ? '#f59e0b' : '#22c55e', fontWeight: 600 }}>{ku: {v}/25</span>
-                ))}
+                {Object.entries(result.breakdown).map(([k, v]) => {
+                  const bg = v < 14 ? 'rgba(233,69,96,0.15)' : v < 18 ? 'rgba(245,158,11,0.15)' : 'rgba(34,197,94,0.15)';
+                  const clr = v < 14 ? '#E94560' : v < 18 ? '#f59e0b' : '#22c55e';
+                  return <span key={k} style={{ fontSize: 12, padding: '4px 12px', borderRadius: 100, background: bg, color: clr, fontWeight: 600 }}>{`${k}: ${v}/25`}</span>;
+                })}
               </div>
             )}
             <div style={{ borderLeft: `3px solid ${RED}`, paddingLeft: 20 }}>
