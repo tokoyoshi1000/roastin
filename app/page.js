@@ -112,12 +112,12 @@ export default function Home() {
           {
             '@type': 'Question',
             name: 'Is this LinkedIn profile checker free?',
-            acceptedAnswer: { '@type': 'Answer', text: 'Yes, the LinkedIn profile roast, score, and quick wins are completely free â no account or credit card needed. A full detailed report with rewritten sections and a 4-week action plan is available for â¬19.' },
+            acceptedAnswer: { '@type': 'Answer', text: 'Yes, the LinkedIn profile roast, score, and quick wins are completely free — no account or credit card needed. A full detailed report with rewritten sections and a 4-week action plan is available for €19.' },
           },
           {
             '@type': 'Question',
             name: 'How does the LinkedIn profile analyzer work?',
-            acceptedAnswer: { '@type': 'Answer', text: 'Paste your LinkedIn profile text (headline, about, experience) into the analyzer. Our AI model scores it across 4 dimensions â Headline, About, Experience, and Social Proof â and gives you a total score out of 100 along with specific, actionable feedback.' },
+            acceptedAnswer: { '@type': 'Answer', text: 'Paste your LinkedIn profile text (headline, about, experience) into the analyzer. Our AI model scores it across 4 dimensions — Headline, About, Experience, and Social Proof — and gives you a total score out of 100 along with specific, actionable feedback.' },
           },
           {
             '@type': 'Question',
@@ -127,7 +127,7 @@ export default function Home() {
           {
             '@type': 'Question',
             name: 'Wie kann ich mein LinkedIn Profil optimieren?',
-            acceptedAnswer: { '@type': 'Answer', text: 'Mit RoastIn kannst du dein LinkedIn Profil kostenlos analysieren lassen. Die KI bewertet dein Profil, erklÃ¤rt warum Recruiter es Ã¼bersehen, und gibt dir 3 konkrete Verbesserungen â in 60 Sekunden, ohne Anmeldung.' },
+            acceptedAnswer: { '@type': 'Answer', text: 'Mit RoastIn kannst du dein LinkedIn Profil kostenlos analysieren lassen. Die KI bewertet dein Profil, erklärt warum Recruiter es übersehen, und gibt dir 3 konkrete Verbesserungen — in 60 Sekunden, ohne Anmeldung.' },
           },
         ],
       },
@@ -146,12 +146,12 @@ export default function Home() {
       {/* NAV */}
       <nav style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '18px 32px', borderBottom: `1px solid ${BORDER}`, position: 'sticky', top: 0, background: NAVY, zIndex: 100 }}>
         <span style={{ fontWeight: 800, fontSize: 20, color: '#fff', letterSpacing: -0.5 }}>
-          ð¥ <span style={{ color: RED }}>Roast</span>In
+          🔥 <span style={{ color: RED }}>Roast</span>In
         </span>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          <span style={{ color: '#888', fontSize: 13 }}>Free Â· No login required</span>
+          <span style={{ color: '#888', fontSize: 13 }}>Free · No login required</span>
           <a href="#form" style={{ background: RED, color: '#fff', padding: '9px 20px', borderRadius: 8, fontWeight: 700, fontSize: 13, textDecoration: 'none' }}>
-            Get Roasted â
+            Get Roasted →
           </a>
         </div>
       </nav>
@@ -160,13 +160,13 @@ export default function Home() {
       {!result && (
         <section style={{ textAlign: 'center', padding: '80px 24px 48px' }}>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(233,69,96,0.12)', border: `1px solid rgba(233,69,96,0.3)`, borderRadius: 100, padding: '6px 16px', fontSize: 12, color: RED, fontWeight: 700, letterSpacing: 1, marginBottom: 32 }}>
-            ð¥ AI-POWERED LINKEDIN ANALYSIS
+            🔥 AI-POWERED LINKEDIN ANALYSIS
           </div>
           <h1 style={{ fontSize: 'clamp(36px,6vw,72px)', fontWeight: 900, color: '#fff', lineHeight: 1.1, margin: '0 auto 20px', maxWidth: 800, letterSpacing: -2 }}>
             Your LinkedIn profile<br />makes you <span style={{ color: RED }}>invisible to recruiters.</span>
           </h1>
           <p style={{ color: '#999', fontSize: 18, maxWidth: 560, margin: '0 auto 48px', lineHeight: 1.6 }}>
-            Free LinkedIn profile checker & analyzer. Get your score out of 100, find out exactly why recruiters skip your profile, and get 3 fixes you can apply today â in 60 seconds.
+            Free LinkedIn profile checker & analyzer. Get your score out of 100, find out exactly why recruiters skip your profile, and get 3 fixes you can apply today — in 60 seconds.
           </p>
           <div style={{ display: 'flex', justifyContent: 'center', gap: 48, marginBottom: 64 }}>
             {[['2,400+', 'Profiles roasted'], ['60s', 'Analysis time'], ['Free', 'No credit card']].map(([v, l]) => (
@@ -193,8 +193,8 @@ export default function Home() {
               </div>
             </div>
             <div style={{ borderLeft: `3px solid ${RED}`, paddingLeft: 16, marginTop: 16 }}>
-              <div style={{ fontSize: 11, color: RED, fontWeight: 700, letterSpacing: 1, marginBottom: 8 }}>ð¥ THE ROAST</div>
-              <p style={{ color: '#ccc', fontSize: 14, lineHeight: 1.6, margin: 0 }}>"Your headline is as generic as a LinkedIn template. The About section reads like a press release written by someone who's never met you â impressive-sounding, but says nothing that differentiates you from the other 900 million users."</p>
+              <div style={{ fontSize: 11, color: RED, fontWeight: 700, letterSpacing: 1, marginBottom: 8 }}>🔥 THE ROAST</div>
+              <p style={{ color: '#ccc', fontSize: 14, lineHeight: 1.6, margin: 0 }}>"Your headline is as generic as a LinkedIn template. The About section reads like a press release written by someone who's never met you — impressive-sounding, but says nothing that differentiates you from the other 900 million users."</p>
             </div>
           </div>
 
@@ -206,7 +206,7 @@ export default function Home() {
               { quote: "Worth every cent. The rewrite suggestions alone saved me hours of guessing.", name: "Jan L.", role: "Founder" },
             ].map((t, i) => (
               <div key={i} style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: 14, padding: '20px 22px', maxWidth: 260, textAlign: 'left', flex: '1 1 220px' }}>
-                <div style={{ color: '#f59e0b', fontSize: 14, marginBottom: 10 }}>âââââ</div>
+                <div style={{ color: '#f59e0b', fontSize: 14, marginBottom: 10 }}>★★★★★</div>
                 <p style={{ color: '#ccc', fontSize: 13, lineHeight: 1.6, margin: '0 0 14px', fontStyle: 'italic' }}>"{t.quote}"</p>
                 <div style={{ color: '#fff', fontWeight: 700, fontSize: 13 }}>{t.name}</div>
                 <div style={{ color: '#555', fontSize: 12 }}>{t.role}</div>
@@ -229,7 +229,7 @@ export default function Home() {
               </div>
               {showInstructions && (
                 <div style={{ margin: '12px 20px', background: 'rgba(233,69,96,0.08)', border: `1px solid rgba(233,69,96,0.2)`, borderRadius: 8, padding: '12px 16px', fontSize: 13, color: '#ccc', lineHeight: 1.6 }}>
-                  Go to your LinkedIn profile â press Ctrl+A (Cmd+A on Mac) â Ctrl+C â paste here.
+                  Go to your LinkedIn profile → press Ctrl+A (Cmd+A on Mac) → Ctrl+C → paste here.
                 </div>
               )}
               <textarea
@@ -244,10 +244,10 @@ export default function Home() {
               disabled={loading || !text.trim()}
               style={{ width: '100%', marginTop: 12, padding: '16px', borderRadius: 12, border: 'none', background: loading || !text.trim() ? '#333' : RED, color: '#fff', fontSize: 16, fontWeight: 800, cursor: loading || !text.trim() ? 'not-allowed' : 'pointer', transition: 'all 0.2s' }}
             >
-              {loading ? 'Roasting your profile...' : 'Roast my profile â'}
+              {loading ? 'Roasting your profile...' : 'Roast my profile →'}
             </button>
             <div style={{ textAlign: 'center', marginTop: 12, color: '#555', fontSize: 12 }}>
-              ð Your text stays private. Never stored or shared.
+              🔒 Your text stays private. Never stored or shared.
             </div>
           </form>
         </section>
@@ -260,7 +260,7 @@ export default function Home() {
             {error}
           </div>
           <button onClick={onReset} style={{ marginTop: 12, background: 'none', border: `1px solid ${BORDER}`, color: '#666', padding: '10px 20px', borderRadius: 8, cursor: 'pointer', fontSize: 13 }}>
-            â Try again
+            ← Try again
           </button>
         </div>
       )}
@@ -288,7 +288,7 @@ export default function Home() {
               </div>
             )}
             <div style={{ borderLeft: `3px solid ${RED}`, paddingLeft: 20 }}>
-              <div style={{ fontSize: 11, color: RED, fontWeight: 700, letterSpacing: 1, marginBottom: 10 }}>ð¥ THE ROAST</div>
+              <div style={{ fontSize: 11, color: RED, fontWeight: 700, letterSpacing: 1, marginBottom: 10 }}>🔥 THE ROAST</div>
               <p style={{ color: '#ddd', fontSize: 15, lineHeight: 1.7, margin: 0 }}>{result.roast}</p>
             </div>
           </div>
@@ -296,7 +296,7 @@ export default function Home() {
           {/* QUICK WINS */}
           {result.quickWins && result.quickWins.length > 0 && (
             <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: 20, padding: '28px', marginBottom: 24 }}>
-              <div style={{ fontSize: 11, color: '#555', fontWeight: 700, letterSpacing: 1, marginBottom: 16 }}>â¡ QUICK WINS</div>
+              <div style={{ fontSize: 11, color: '#555', fontWeight: 700, letterSpacing: 1, marginBottom: 16 }}>⚡ QUICK WINS</div>
               {result.quickWins.map((win, i) => (
                 <div key={i} style={{ display: 'flex', gap: 12, alignItems: 'flex-start', marginBottom: i < result.quickWins.length - 1 ? 14 : 0 }}>
                   <span style={{ color: RED, fontWeight: 700, fontSize: 13, minWidth: 20 }}>{i + 1}.</span>
@@ -309,9 +309,9 @@ export default function Home() {
           {/* EMAIL CAPTURE */}
           {!emailSent ? (
             <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: 20, padding: '24px 28px', marginBottom: 24 }}>
-              <div style={{ fontSize: 11, color: '#555', fontWeight: 700, letterSpacing: 1, marginBottom: 10 }}>ð¬ GET YOUR RESULTS BY EMAIL</div>
+              <div style={{ fontSize: 11, color: '#555', fontWeight: 700, letterSpacing: 1, marginBottom: 10 }}>📬 GET YOUR RESULTS BY EMAIL</div>
               <p style={{ color: '#aaa', fontSize: 14, lineHeight: 1.5, margin: '0 0 16px' }}>
-                We'll send your score and quick wins to your inbox â no spam, unsubscribe anytime.
+                We'll send your score and quick wins to your inbox — no spam, unsubscribe anytime.
               </p>
               <form onSubmit={handleEmailCapture} style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
                 <input
@@ -325,13 +325,13 @@ export default function Home() {
                   type="submit"
                   disabled={emailLoading || !email.includes('@')}
                   style={{ padding: '10px 20px', borderRadius: 8, border: 'none', background: emailLoading || !email.includes('@') ? '#333' : RED, color: '#fff', fontSize: 14, fontWeight: 700, cursor: emailLoading || !email.includes('@') ? 'not-allowed' : 'pointer', whiteSpace: 'nowrap' }}>
-                  {emailLoading ? '...' : 'Send â'}
+                  {emailLoading ? '...' : 'Send →'}
                 </button>
               </form>
             </div>
           ) : (
             <div style={{ background: 'rgba(34,197,94,0.08)', border: '1px solid rgba(34,197,94,0.2)', borderRadius: 20, padding: '20px 28px', marginBottom: 24, display: 'flex', alignItems: 'center', gap: 12 }}>
-              <span style={{ fontSize: 20 }}>â</span>
+              <span style={{ fontSize: 20 }}>✅</span>
               <div>
                 <div style={{ color: '#22c55e', fontWeight: 700, fontSize: 14 }}>Results sent!</div>
                 <div style={{ color: '#666', fontSize: 13 }}>Check your inbox in the next few minutes.</div>
@@ -339,21 +339,21 @@ export default function Home() {
             </div>
           )}
 
-          {/* UPSELL â Full Report */}
+          {/* UPSELL — Full Report */}
           <div style={{ background: `linear-gradient(135deg, rgba(233,69,96,0.15) 0%, rgba(233,69,96,0.05) 100%)`, border: `1px solid rgba(233,69,96,0.3)`, borderRadius: 20, padding: '32px', marginBottom: 24 }}>
-            <div style={{ fontSize: 11, color: RED, fontWeight: 700, letterSpacing: 1, marginBottom: 12, textAlign: 'center' }}>ð WANT THE FULL PICTURE?</div>
+            <div style={{ fontSize: 11, color: RED, fontWeight: 700, letterSpacing: 1, marginBottom: 12, textAlign: 'center' }}>🚀 WANT THE FULL PICTURE?</div>
             <h3 style={{ color: '#fff', fontSize: 22, fontWeight: 800, margin: '0 0 12px', letterSpacing: -0.5, textAlign: 'center' }}>Get Your Full LinkedIn Report</h3>
             <p style={{ color: '#aaa', fontSize: 14, lineHeight: 1.6, margin: '0 0 20px', textAlign: 'center' }}>
               Everything you need to go from overlooked to inbound-ready.
             </p>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 24 }}>
               {[
-                'âï¸ Rewritten headline + About',
-                'ð Section-by-section breakdown',
-                'ð¯ 10 specific improvements',
-                'ð 4-week action plan',
-                'ð Keywords to add',
-                'â¡ Instant delivery',
+                '✍️ Rewritten headline + About',
+                '📊 Section-by-section breakdown',
+                '🎯 10 specific improvements',
+                '📅 4-week action plan',
+                '🔑 Keywords to add',
+                '⚡ Instant delivery',
               ].map((item, i) => (
                 <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#ccc', fontSize: 13 }}>
                   {item}
@@ -364,9 +364,9 @@ export default function Home() {
               onClick={handleCheckout}
               disabled={checkingOut}
               style={{ width: '100%', padding: '16px 36px', borderRadius: 10, border: 'none', background: RED, color: '#fff', fontSize: 17, fontWeight: 800, cursor: checkingOut ? 'not-allowed' : 'pointer', opacity: checkingOut ? 0.7 : 1, boxShadow: '0 4px 20px rgba(233,69,96,0.4)', transition: 'all 0.2s' }}>
-              {checkingOut ? 'Redirecting to checkout...' : 'Get Full Report â â¬19'}
+              {checkingOut ? 'Redirecting to checkout...' : 'Get Full Report — €19'}
             </button>
-            <div style={{ color: '#555', fontSize: 12, marginTop: 10, textAlign: 'center' }}>One-time payment Â· Instant delivery Â· 30-day money-back guarantee</div>
+            <div style={{ color: '#555', fontSize: 12, marginTop: 10, textAlign: 'center' }}>One-time payment · Instant delivery · 30-day money-back guarantee</div>
           </div>
 
           {/* SHARE + RESET */}
@@ -379,7 +379,7 @@ export default function Home() {
             <button
               onClick={onReset}
               style={{ padding: '11px 22px', borderRadius: 9, border: `1px solid ${BORDER}`, background: 'transparent', color: '#555', fontSize: 13, cursor: 'pointer' }}>
-              â Roast another profile
+              ← Roast another profile
             </button>
           </div>
         </section>
@@ -410,20 +410,20 @@ export default function Home() {
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, textAlign: 'left' }}>
               <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: 16, padding: '24px' }}>
                 <div style={{ color: '#fff', fontWeight: 800, fontSize: 16, marginBottom: 16 }}>Free Roast</div>
-                {['Profile score (0â100)', 'Headline & About score', 'Experience & Social score', 'Brutal roast paragraph', '3 quick wins'].map((item, i) => (
+                {['Profile score (0–100)', 'Headline & About score', 'Experience & Social score', 'Brutal roast paragraph', '3 quick wins'].map((item, i) => (
                   <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'center', marginBottom: 10, color: '#aaa', fontSize: 13 }}>
-                    <span style={{ color: '#22c55e' }}>â</span> {item}
+                    <span style={{ color: '#22c55e' }}>✓</span> {item}
                   </div>
                 ))}
               </div>
               <div style={{ background: `linear-gradient(135deg, rgba(233,69,96,0.12) 0%, rgba(233,69,96,0.04) 100%)`, border: `1px solid rgba(233,69,96,0.3)`, borderRadius: 16, padding: '24px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
                   <div style={{ color: '#fff', fontWeight: 800, fontSize: 16 }}>Full Report</div>
-                  <div style={{ color: RED, fontWeight: 800, fontSize: 15 }}>â¬19</div>
+                  <div style={{ color: RED, fontWeight: 800, fontSize: 15 }}>€19</div>
                 </div>
                 {['Everything in Free', 'Rewritten headline + About', 'Section-by-section analysis', '10 specific improvements', '4-week action plan', 'Keywords to add'].map((item, i) => (
                   <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'center', marginBottom: 10, color: i === 0 ? '#aaa' : '#fff', fontSize: 13 }}>
-                    <span style={{ color: RED }}>â</span> {item}
+                    <span style={{ color: RED }}>✓</span> {item}
                   </div>
                 ))}
               </div>
@@ -432,7 +432,7 @@ export default function Home() {
         </section>
       )}
 
-      {/* FAQ â SEO + LLM visibility */}
+      {/* FAQ — SEO + LLM visibility */}
       {!result && (
         <section style={{ padding: '64px 24px 80px', borderTop: `1px solid ${BORDER}` }}>
           <div style={{ maxWidth: 720, margin: '0 auto' }}>
@@ -443,11 +443,11 @@ export default function Home() {
             {[
               {
                 q: 'What is RoastIn?',
-                a: 'RoastIn is a free AI-powered LinkedIn profile checker and analyzer. It scores your profile out of 100, identifies exactly why you might be invisible to recruiters, and gives you 3 specific improvements â in 60 seconds, with no login required.',
+                a: 'RoastIn is a free AI-powered LinkedIn profile checker and analyzer. It scores your profile out of 100, identifies exactly why you might be invisible to recruiters, and gives you 3 specific improvements — in 60 seconds, with no login required.',
               },
               {
                 q: 'Is the LinkedIn profile checker really free?',
-                a: 'Yes. The profile roast, AI score, and quick wins are completely free â no credit card, no account. A full detailed report with rewritten sections and a 4-week LinkedIn optimization plan is available for â¬19.',
+                a: 'Yes. The profile roast, AI score, and quick wins are completely free — no credit card, no account. A full detailed report with rewritten sections and a 4-week LinkedIn optimization plan is available for €19.',
               },
               {
                 q: 'How does the LinkedIn profile analyzer work?',
@@ -459,7 +459,7 @@ export default function Home() {
               },
               {
                 q: 'Wie kann ich mein LinkedIn Profil optimieren? (LinkedIn Optimierung)',
-                a: 'Mit RoastIn kannst du dein LinkedIn Profil kostenlos analysieren lassen. Die KI bewertet Headline, About, Experience und Social Proof, erklÃ¤rt warum Recruiter dein Profil Ã¼bersehen, und gibt dir 3 konkrete Verbesserungen â in 60 Sekunden, ohne Anmeldung.',
+                a: 'Mit RoastIn kannst du dein LinkedIn Profil kostenlos analysieren lassen. Die KI bewertet Headline, About, Experience und Social Proof, erklärt warum Recruiter dein Profil übersehen, und gibt dir 3 konkrete Verbesserungen — in 60 Sekunden, ohne Anmeldung.',
               },
             ].map(({ q, a }, i) => (
               <div key={i} style={{ borderBottom: `1px solid ${BORDER}`, padding: '20px 0' }}>
@@ -473,9 +473,9 @@ export default function Home() {
 
       {/* FOOTER */}
       <footer style={{ borderTop: `1px solid ${BORDER}`, padding: '24px 32px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
-        <span style={{ color: '#444', fontSize: 13 }}>ð¥ RoastIn â <a href="https://vibe.ventures" style={{ color: '#555', textDecoration: 'none' }}>Vibe Ventures</a></span>
-        <span style={{ color: '#333', fontSize: 12 }}>Your data is never stored. &nbsp;Â·&nbsp; <a href="/impressum" style={{ color: '#444', textDecoration: 'none' }}>Impressum</a></span>
-          <span style={{ color: '#333' }}>·</span>
+        <span style={{ color: '#444', fontSize: 13 }}>🔥 RoastIn — <a href="https://vibe.ventures" style={{ color: '#555', textDecoration: 'none' }}>Vibe Ventures</a></span>
+        <span style={{ color: '#333', fontSize: 12 }}>Your data is never stored. &nbsp;·&nbsp; <a href="/impressum" style={{ color: '#444', textDecoration: 'none' }}>Impressum</a></span>
+          <span style={{ color: '#333' }}>�</span>
           <span><a href="/datenschutz" style={{ color: '#444', textDecoration: 'none' }}>Datenschutz</a></span>
       </footer>
 
