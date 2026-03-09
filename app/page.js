@@ -475,7 +475,7 @@ export default function Home() {
       <footer style={{ borderTop: `1px solid ${BORDER}`, padding: '24px 32px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
         <span style={{ color: '#444', fontSize: 13 }}>🔥 RoastIn — <a href="https://vibe.ventures" style={{ color: '#555', textDecoration: 'none' }}>Vibe Ventures</a></span>
         <span style={{ color: '#333', fontSize: 12 }}>Your data is never stored. &nbsp;·&nbsp; <a href="/impressum" style={{ color: '#444', textDecoration: 'none' }}>Impressum</a></span>
-          <span style={{ color: '#333' }}>�</span>
+          <span style={{ color: '#444', fontSize: 12 }}>|</span>
           <span><a href="/datenschutz" style={{ color: '#444', textDecoration: 'none' }}>Datenschutz</a></span>
       </footer>
 
