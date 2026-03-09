@@ -1,4 +1,5 @@
 /**
+import Script from 'next/script'
  * app/layout.js — RoastIn Root Layout & SEO
  *
  * Full metadata for Google #1 ranking on:
@@ -86,7 +87,9 @@ export default function RootLayout({ children }) {
           MozOsxFontSmoothing: 'grayscale',
         }}
       >
-        {children}
+        <Script src="https://www.googletagmanager.com/gtag/js?id=G-PVZ0063LS1" strategy="afterInteractive" />
+      <Script id="google-analytics" strategy="afterInteractive">{`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-PVZ0063LS1');`}</Script>
+      {children}
       </body>
     </html>
   )
